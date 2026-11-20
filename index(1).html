@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#10131b"><title>ClipForge AI — Online AI Video Studio</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--bg:#0c0f16;--panel:#151a25;--panel2:#1c2331;--text:#f4f6fb;--muted:#9aa5b7;--accent:#8b70ff;--line:#2a3344;--good:#62d6a5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 90% -10%,#27204c 0%,transparent 60%),var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px clamp(16px,4vw,42px);border-bottom:1px solid var(--line);position:sticky;top:0;background:#0c0f16ed;backdrop-filter:blur(14px);z-index:3}
+.brand{font-weight:850;letter-spacing:.04em;font-size:18px}.brand span{color:var(--accent)}.status{font-size:12px;color:var(--good);border:1px solid #285d4c;padding:5px 9px;border-radius:30px}
+main{max-width:1180px;margin:auto;padding:24px clamp(14px,3vw,34px) 60px}.intro{display:flex;justify-content:space-between;gap:20px;align-items:end;margin:10px 0 22px}.intro h1{font-size:clamp(27px,5vw,42px);line-height:1.05;margin:0 0 8px}.intro p{margin:0;color:var(--muted);max-width:650px}
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.85fr);gap:18px}.panel{background:linear-gradient(180deg,#171d29,#121722);border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}.panel h2{font-size:16px;margin:0 0 14px}.preview{background:#05070b;border:1px solid #283143;border-radius:14px;aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden;position:relative}.preview video{width:100%;height:100%;object-fit:contain}.placeholder{text-align:center;color:var(--muted);padding:20px}.placeholder b{display:block;color:#fff;font-size:16px;margin-bottom:5px}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.btn{border:0;border-radius:11px;padding:11px 15px;background:var(--accent);color:white;font-weight:700;cursor:pointer}.btn.secondary{background:#252d3d;border:1px solid #39445a}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.full{width:100%}input,select,textarea{width:100%;background:#0d121b;color:var(--text);border:1px solid #303b4f;border-radius:10px;padding:10px;font:inherit;min-width:0}input[type=file]{display:none}label{display:block;color:var(--muted);font-size:12px;margin:12px 0 6px}.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.muted{color:var(--muted);font-size:13px}.section{margin-top:16px}.progress{height:7px;border-radius:8px;background:#252d3b;overflow:hidden;margin:10px 0}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8b70ff,#54d6c0);transition:width .2s}.chatlog{height:170px;overflow:auto;background:#0d121b;border:1px solid var(--line);border-radius:12px;padding:10px;font-size:13px}.msg{margin:0 0 9px}.msg b{color:#b9aaff}.chatrow{display:flex;gap:8px;margin-top:9px}.chatrow input{flex:1}.tag{font-size:11px;color:#c6baff;background:#292347;padding:4px 8px;border-radius:30px;display:inline-block;margin:0 5px 5px 0}.notice{background:#211e36;border:1px solid #40356c;padding:11px 12px;border-radius:12px;color:#d8d0ff;font-size:12px;margin-top:14px}.sublist{max-height:150px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:9px;color:var(--muted);font-size:12px}.subitem{padding:5px 0;border-bottom:1px solid #242d3b}.subitem:last-child{border:0}.small{font-size:11px;color:var(--muted)}a{color:#c5b9ff}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.intro{align-items:start;flex-direction:column}header{position:static}}
+</style></head>
+<body>
+<header><div class="brand">CLIPFORGE <span>AI</span></div><div class="status" id="privacy">● Local-first editing</div></header>
+<main>
+<div class="intro"><div><h1>Make every moment<br>worth sharing.</h1><p>AI-directed video editing, online speech-to-subtitle generation, motion effects and social-ready exports.</p></div><div><span class="tag">9:16 vertical</span><span class="tag">16:9 horizontal</span><span class="tag">English captions</span></div></div>
+<div class="grid">
+<section class="panel">
+<h2>01 · Your video</h2>
+<div class="preview" id="preview"><div class="placeholder"><b>Choose a video to begin</b>Video stays in this browser session.</div></div>
+<div class="row section"><label class="btn" for="videoFile">Choose video</label><input id="videoFile" type="file" accept="video/*"><span class="muted" id="fileName">No file selected</span></div>
+<div class="fieldgrid section">
+<div><label>Start time (seconds)</label><input id="start" type="number" min="0" step=".1" value="0"></div>
+<div><label>End time (seconds)</label><input id="end" type="number" min="0" step=".1" placeholder="Video end"></div>
+</div>
+<div class="fieldgrid">
+<div><label>Output format</label><select id="aspect"><option value="original">Keep original</option><option value="9:16">Vertical · 9:16</option><option value="16:9">Horizontal · 16:9</option></select></div>
+<div><label>Caption style</label><select id="captionStyle"><option value="white">White bold</option><option value="yellow">Yellow highlight</option></select></div>
+</div>
+<div class="fieldgrid section">
+<div><label>Motion / animation</label><select id="animation"><option value="none">No animation</option><option value="zoom-in">Cinematic zoom in</option><option value="zoom-out">Cinematic zoom out</option><option value="pan-left">Pan left</option><option value="pan-right">Pan right</option><option value="shake">Light camera shake</option></select></div>
+<div><label>Visual effect</label><select id="effect"><option value="none">No effect</option><option value="cinematic">Cinematic contrast</option><option value="grayscale">Black & white</option><option value="vintage">Vintage warm</option><option value="soft-blur">Soft blur</option><option value="sharpen">Sharpen</option></select></div>
+</div>
+<div class="fieldgrid">
+<div><label>Playback speed</label><select id="speed"><option value="1">Normal · 1×</option><option value="0.5">Slow · 0.5×</option><option value="0.75">Slow · 0.75×</option><option value="1.25">Fast · 1.25×</option><option value="1.5">Fast · 1.5×</option><option value="2">Fast · 2×</option></select></div>
+<div><label>Rotation</label><select id="rotate"><option value="0">0°</option><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select></div>
+</div>
+<div class="fieldgrid"><div><label>Audio volume</label><select id="volume"><option value="1">100%</option><option value="0">Mute</option><option value="0.5">50%</option><option value="1.5">150%</option><option value="2">200%</option></select></div><div><label>Fade in / out</label><select id="fade"><option value="none">Off</option><option value="1">1 second</option><option value="2">2 seconds</option><option value="3">3 seconds</option></select></div></div>
+<div class="section"><button class="btn secondary" id="transcribe" disabled>Generate online subtitles</button> <button class="btn" id="export" disabled>Export edited MP4</button></div>
+<div class="progress"><i id="bar"></i></div><div class="muted" id="workStatus">Choose a video to unlock editing.</div>
+<div class="section"><h2>02 · Transcript</h2><div id="transcript" class="sublist">Your timed English subtitles will appear here.</div><div class="row section"><button class="btn secondary" id="downloadSrt" disabled>Download SRT</button><span class="small">SRT can be used in other editors too.</span></div></div>
+</section>
+<aside class="panel">
+<h2>03 · AI director — direct editing commands</h2>
+<div class="chatlog" id="chatlog"><p class="msg"><b>ClipForge:</b> Give me a direct instruction: “Make this a 20-second cinematic Reel, add a slow zoom-in, warm vintage color and bold subtitles.”</p></div>
+<div class="chatrow"><input id="command" placeholder="Describe the edit you want…"><button class="btn" id="send">Ask AI</button></div><p class="small">AI turns your prompt into editable FFmpeg settings. Review the plan before exporting.</p>
+<div class="notice">Video rendering stays in your browser. Online subtitles send an extracted audio track to your deployed server, which forwards it to OpenAI. AI editing commands send text and settings only; the original video is not uploaded for AI planning.</div>
+<div class="section"><h2>04 · Processing engine</h2><div class="muted" id="engineStatus">Not loaded yet. FFmpeg WebAssembly engine. Online transcription is provided by the server API.</div><div class="progress"><i id="engineBar"></i></div><button class="btn secondary full" id="warmup">Load local AI engine</button></div>
+<div class="section"><h2>Studio capabilities</h2><p class="muted">✓ AI natural-language edit plans<br>✓ Online timestamped subtitles + SRT<br>✓ FFmpeg trim, crop, speed, rotate, volume and fades<br>✓ Zoom, pan and shake motion presets<br>✓ Cinematic, vintage, monochrome, blur and sharpen looks<br>✓ Subtitle burn-in when supported by the FFmpeg build</p></div>
+</aside></div>
+<p class="small" style="margin-top:20px">For best results use the latest Chrome on Android or desktop. Long videos can exceed mobile browser memory limits. Keep the tab open during processing. This is a browser app, not a native APK.</p>
+</main>
+<script type="module">
+const $=id=>document.getElementById(id);
+let file=null, videoUrl=null, transcript=[], srtText="", ffmpeg=null, engineLoading=false;
+const log=(who,msg)=>{const p=document.createElement('p');p.className='msg';p.innerHTML=`<b>${who}:</b> ${escapeHtml(msg)}`;$('chatlog').append(p);$('chatlog').scrollTop=$('chatlog').scrollHeight};
+const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function status(s,p){$('workStatus').textContent=s;if(p!==undefined)$('bar').style.width=Math.max(0,Math.min(100,p))+'%'}
+function timeSrt(t){let ms=Math.max(0,Math.round(t*1000)),h=Math.floor(ms/3600000);ms%=3600000;let m=Math.floor(ms/60000);ms%=60000;let s=Math.floor(ms/1000);ms%=1000;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')},${String(ms).padStart(3,'0')}`}
+function makeSrt(rows){return rows.map((r,i)=>`${i+1}\n${timeSrt(r.start)} --> ${timeSrt(r.end)}\n${String(r.text||'').trim()}`).join('\n\n')}
+function updateTranscript(){ $('transcript').innerHTML=transcript.length?transcript.map((r,i)=>`<div class="subitem"><b>${timeSrt(r.start)}</b> ${escapeHtml(r.text)}</div>`).join(''):'No transcript yet.';srtText=makeSrt(transcript);$('downloadSrt').disabled=!transcript.length}
+$('videoFile').addEventListener('change',e=>{file=e.target.files?.[0];if(!file)return;if(videoUrl)URL.revokeObjectURL(videoUrl);videoUrl=URL.createObjectURL(file);const v=document.createElement('video');v.src=videoUrl;v.controls=true;v.playsInline=true;$('preview').replaceChildren(v);$('fileName').textContent=file.name;$('transcribe').disabled=false;$('export').disabled=false;$('end').value='';transcript=[];updateTranscript();status('Video ready. Load AI engine to create subtitles.',0)});
+async function loadEngines(){
+ if(engineLoading)return;engineLoading=true;$('warmup').disabled=true;
+ try{
+  $('engineStatus').textContent='Loading FFmpeg video and audio engine…';
+  const {FFmpeg}=await import('https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm/index.js');
+  ffmpeg=new FFmpeg();
+  ffmpeg.on('log',({message})=>{if(message)status(message.slice(-120));});
+  ffmpeg.on('progress',({progress})=>status('Rendering video…',Math.round(progress*100)));
+  await ffmpeg.load({coreURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',wasmURL:'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'});
+  $('engineStatus').textContent='FFmpeg ready. Online subtitles require the deployed transcription API.';
+  $('engineBar').style.width='100%';log('ClipForge','FFmpeg is ready. Video rendering remains in this browser.');
+ }catch(err){$('engineStatus').textContent='Could not load engines: '+err.message;log('ClipForge','Engine loading failed. Check connection and try again.');}
+ finally{engineLoading=false;$('warmup').disabled=false}
+}
+$('warmup').onclick=loadEngines;
+$('transcribe').onclick=async()=>{
+ if(!file)return;if(!ffmpeg)await loadEngines();if(!ffmpeg){status('FFmpeg engine could not be loaded.');return}
+ try{
+  status('Extracting speech audio for online transcription…',5);
+  const bytes=new Uint8Array(await file.arrayBuffer());await ffmpeg.writeFile('source_input',bytes);
+  await ffmpeg.exec(['-i','source_input','-vn','-ac','1','-ar','16000','-b:a','16k','-f','mp3','speech.mp3']);
+  const audio=await ffmpeg.readFile('speech.mp3');
+  if(audio.byteLength>3*1024*1024)throw Error('Audio exceeds the secure online request limit. Trim the clip shorter and try again.');
+  let binary='';for(let i=0;i<audio.length;i+=0x8000)binary+=String.fromCharCode(...audio.subarray(i,i+0x8000));
+  status('Sending audio securely to the online transcription service…',35);
+  const response=await fetch('/api/transcribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({audioBase64:btoa(binary),filename:'clip.mp3',language:'en'})});
+  const data=await response.json();if(!response.ok)throw Error(data.error||'Online transcription failed');
+  transcript=(data.segments||[]).map(x=>({start:Number(x.start)||0,end:Number(x.end)||((Number(x.start)||0)+2),text:x.text||''})).filter(x=>x.text.trim());
+  if(!transcript.length&&data.text)transcript=[{start:0,end:Math.max(1,Number(data.duration)||10),text:data.text}];
+  updateTranscript();status(`Online subtitles ready: ${transcript.length} segments.`,100);log('ClipForge',`Generated ${transcript.length} online subtitle segments. Download SRT or burn captions into your export.`);
+ }catch(err){status('Subtitle generation failed: '+err.message);log('ClipForge','Online subtitles failed. Check deployment/API configuration and try a shorter clip.')}
+};
+$('downloadSrt').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([srtText],{type:'text/plain'}));a.download=(file?.name||'clip').replace(/\.[^.]+$/,'')+'.srt';a.click();URL.revokeObjectURL(a.href)};
+$('export').onclick=async()=>{
+ if(!file)return;if(!ffmpeg)await loadEngines();if(!ffmpeg)return;
+ try{
+  const ext=(file.name.split('.').pop()||'mp4').toLowerCase();const input='clip_input.'+ext;await ffmpeg.writeFile(input,new Uint8Array(await file.arrayBuffer()));
+  const start=Math.max(0,Number($('start').value)||0),end=Number($('end').value);
+  if(Number.isFinite(end)&&end>0&&end<=start)throw Error('End time must be greater than start time.');
+  let args=['-ss',String(start),'-i',input];if(Number.isFinite(end)&&end>start)args.push('-t',String(end-start));
+  const aspect=$('aspect').value;
+  const filters=[];
+  if(aspect==='9:16')filters.push("scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280");
+  if(aspect==='16:9')filters.push("scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720");
+  const motion=$('animation').value,look=$('effect').value;
+  const speed=Number($('speed').value)||1,rotation=Number($('rotate').value)||0,volume=Number($('volume').value)||0,fade=Number($('fade').value)||0;
+  if(rotation===90)filters.push('transpose=1');if(rotation===180)filters.push('hflip,vflip');if(rotation===270)filters.push('transpose=2');
+  if(speed!==1)filters.push(`setpts=${(1/speed).toFixed(4)}*PTS`);
+  if(fade>0)filters.push(`fade=t=in:st=0:d=${fade}`);
+  if(motion==='zoom-in')filters.push("zoompan=z='min(zoom+0.0012,1.14)':d=1:s=1280x720:fps=25");
+  if(motion==='zoom-out')filters.push("zoompan=z='if(eq(on,1),1.14,max(1.0,zoom-0.0012))':d=1:s=1280x720:fps=25");
+  if(motion==='pan-left')filters.push("zoompan=z='1.12':x='(iw-iw/zoom)*(1-on/250)':y='(ih-ih/zoom)/2':d=1:s=1280x720:fps=25");
+  if(motion==='pan-right')filters.push("zoompan=z='1.12':x='(iw-iw/zoom)*(on/250)':y='(ih-ih/zoom)/2':d=1:s=1280x720:fps=25");
+  if(motion==='shake')filters.push("crop=iw-16:ih-16:x='8+4*sin(2*PI*t*5)':y='8+4*cos(2*PI*t*4)'");
+  if(look==='cinematic')filters.push('eq=contrast=1.12:saturation=1.12:brightness=-0.02');
+  if(look==='grayscale')filters.push('hue=s=0');
+  if(look==='vintage')filters.push('colorbalance=rs=.08:gs=.02:bs=-.06,eq=saturation=.82:contrast=1.08');
+  if(look==='soft-blur')filters.push('gblur=sigma=1.2');
+  if(look==='sharpen')filters.push('unsharp=5:5:0.8:3:3:0.4');
+  if(transcript.length)await ffmpeg.writeFile('captions.srt',new TextEncoder().encode(srtText));
+  const cropOnly=[...filters];
+  if(transcript.length){const color=$('captionStyle').value==='yellow'?'&H0000FFFF':'&H00FFFFFF';filters.push(`subtitles=captions.srt:force_style='FontName=Arial,FontSize=22,Bold=1,PrimaryColour=${color},Outline=2,Shadow=1,Alignment=2'`)}
+  if(fade>0)filters.push(`fade=t=out:st=${Math.max(0,(Number.isFinite(end)&&end>start?end-start:30)-fade)}:d=${fade}`);
+  if(filters.length)args.push('-vf',filters.join(','));
+  const audioFilters=[];if(speed!==1)audioFilters.push(`atempo=${speed}`);if(fade>0)audioFilters.push(`afade=t=in:d=${fade}`,`afade=t=out:st=${Math.max(0,(Number.isFinite(end)&&end>start?end-start:30)-fade)}:d=${fade}`);audioFilters.push(`volume=${volume}`);args.push('-af',audioFilters.join(','));
+  args.push('-c:v','libx264','-preset','ultrafast','-crf','25','-c:a','aac','-b:a','128k','-movflags','+faststart','result.mp4');
+  status('Exporting edited MP4 locally…',0);
+  let burn=true;
+  try{await ffmpeg.exec(args)}catch(err){
+   if(transcript.length){burn=false;const vfIndex=args.indexOf('-vf');const fallback=args.filter((v,i)=>i!==vfIndex&&i!==vfIndex+1);if(cropOnly.length)fallback.splice(fallback.indexOf('-c:v'),0,'-vf',cropOnly.join(','));await ffmpeg.exec(fallback);log('ClipForge','This FFmpeg build lacks subtitle burn-in. Exported the video and separate SRT instead.')}
+   else throw err;
+  }
+  const data=await ffmpeg.readFile('result.mp4');const url=URL.createObjectURL(new Blob([data.buffer],{type:'video/mp4'}));const a=document.createElement('a');a.href=url;a.download='clipforge_export.mp4';a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);
+  status(burn?'MP4 exported.':'MP4 exported; download SRT separately for captions.',100);log('ClipForge','Export complete. Saved from your browser.');
+ }catch(err){status('Export failed: '+err.message);log('ClipForge','Export failed. Try a shorter MP4 or use a desktop browser.')}
+};
+function applyCommand(raw){
+ const s=raw.toLowerCase();let changed=[];
+ const range=s.match(/(?:from\s+)?(\d+(?:\.\d+)?)\s*(?:s|sec|seconds)?\s*(?:to|until|-)\s*(\d+(?:\.\d+)?)\s*(?:s|sec|seconds)?/);
+ if(range){$('start').value=range[1];$('end').value=range[2];changed.push(`trim ${range[1]}–${range[2]} seconds`)}
+ const dur=s.match(/(\d+)\s*(?:second|seconds|sec)\s*(?:clip|video|short)/);
+ if(dur){$('start').value=0;$('end').value=dur[1];changed.push(`${dur[1]} second clip`)}
+ if(/vertical|9:16|reel|shorts|tiktok/.test(s)){$('aspect').value='9:16';changed.push('vertical 9:16')}
+ if(/horizontal|landscape|16:9|youtube/.test(s)){$('aspect').value='16:9';changed.push('horizontal 16:9')}
+ if(/original aspect|keep original/.test(s)){$('aspect').value='original';changed.push('original aspect')}
+ if(/subtitle|caption|transcrib/.test(s)){changed.push('English subtitles');$('transcribe').click()}
+ if(/export|render|save/.test(s)){changed.push('export');setTimeout(()=>$('export').click(),500)}
+ if(/best moments|highlights|interesting|viral/.test(s)){changed.push('highlight suggestion');if(transcript.length){const candidates=transcript.filter(x=>x.text.length>45).slice(0,5);log('ClipForge',candidates.length?'Possible highlight lines: '+candidates.map(x=>`${Math.round(x.start)}s “${x.text.trim()}”`).join(' | '):'No obvious highlight lines found.')}else log('ClipForge','Generate subtitles first; I can then suggest possible highlight moments using transcript heuristics.')}
+ return changed;
+}
+async function requestAIPlan(prompt){
+ const r=await fetch('/api/ai-edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt,video:{name:file?.name||null},transcript:transcript.slice(0,120)})});
+ const d=await r.json();if(!r.ok)throw Error(d.error||'AI service unavailable');return d.plan;
+}
+function applyPlan(p){
+ const changed=[];
+ if(p.start!==null&&p.start!==undefined){$('start').value=p.start;changed.push('start '+p.start+'s')}
+ if(p.end!==null&&p.end!==undefined){$('end').value=p.end;changed.push('end '+p.end+'s')}
+ if(['original','9:16','16:9'].includes(p.aspect)){$('aspect').value=p.aspect;changed.push(p.aspect+' aspect')}
+ if(['none','zoom-in','zoom-out','pan-left','pan-right','shake'].includes(p.animation)){$('animation').value=p.animation;changed.push(p.animation+' motion')}
+ if(['none','cinematic','grayscale','vintage','soft-blur','sharpen'].includes(p.effect)){$('effect').value=p.effect;changed.push(p.effect+' look')}
+ if([0.5,0.75,1,1.25,1.5,2].includes(Number(p.speed))){$('speed').value=String(p.speed);changed.push('speed '+p.speed+'x');}
+ if([0,90,180,270].includes(Number(p.rotate))){$('rotate').value=String(p.rotate);changed.push('rotation '+p.rotate+'°');}
+ if([0,0.5,1,1.5,2].includes(Number(p.volume))){$('volume').value=String(p.volume);changed.push('volume '+p.volume+'x');}
+ if(p.subtitles){changed.push('subtitle generation');$('transcribe').click()}
+ if(['none','1','2','3',1,2,3].includes(p.fade)){$('fade').value=String(p.fade);if(p.fade!=='none')changed.push('fade '+p.fade+'s');}
+ return changed;
+}
+$('send').onclick=async()=>{
+ const raw=$('command').value.trim();if(!raw)return;log('You',raw);$('send').disabled=true;
+ try{
+  const plan=await requestAIPlan(raw);const changes=applyPlan(plan);
+  log('AI director',`${plan.explanation||'Editing plan created.'} ${changes.length?'Applied settings: '+changes.join(', ')+'.':''} Review the controls and press Export edited MP4.`);
+ }catch(err){const c=applyCommand(raw);log('ClipForge',c.length?'AI server unavailable; applied basic local commands: '+c.join(', ')+'.':'AI director error: '+err.message+' — deploy /api/ai-edit and set OPENAI_API_KEY.');}
+ finally{$('send').disabled=false;$('command').value=''}
+};
+$('command').addEventListener('keydown',e=>{if(e.key==='Enter')$('send').click()});
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script></body></html>

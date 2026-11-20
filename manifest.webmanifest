@@ -1,0 +1,10 @@
+{
+  "name": "ClipForge AI Online Video Studio",
+  "short_name": "ClipForge AI",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0c0f16",
+  "theme_color": "#10131b",
+  "description": "AI-directed video editing, online subtitles and FFmpeg motion effects",
+  "icons": []
+}
